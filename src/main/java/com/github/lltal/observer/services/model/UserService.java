@@ -3,6 +3,7 @@ package com.github.lltal.observer.services.model;
 import com.github.lltal.observer.input.dto.UserDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.output.UserRepo;
+import com.github.lltal.observer.services.base.ModelService;
 import com.github.lltal.observer.services.builder.UserBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements ModelService<UserDto, String>{
+public class UserService implements ModelService<UserDto, String> {
     private final UserRepo repo;
     private final UserBuilder builder;
 

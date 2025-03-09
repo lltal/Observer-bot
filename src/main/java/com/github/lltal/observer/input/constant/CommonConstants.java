@@ -6,6 +6,7 @@ public class CommonConstants {
 
     public static final String YES = "да";
     public static final String NO = "нет";
+    public static final String CLOSE = "завершить";
     public static final String WINTER = "зима";
     public static final String SUMMER = "лето";
 

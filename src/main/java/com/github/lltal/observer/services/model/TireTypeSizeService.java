@@ -3,6 +3,7 @@ package com.github.lltal.observer.services.model;
 import com.github.lltal.observer.input.dto.TireTypeSizeDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.output.TireTypeSizeRepo;
+import com.github.lltal.observer.services.base.ModelService;
 import com.github.lltal.observer.services.builder.TireTypeSizeBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

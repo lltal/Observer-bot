@@ -1,5 +1,6 @@
 package com.github.lltal.observer.services.parser;
 
+import com.github.lltal.filler.starter.command.CommandContext;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -41,9 +42,9 @@ public class UpdateParser {
                 .getId();
     }
 
-    public String getUserName(Update update) {
-        return update
-                .getMyChatMember()
+    public String getUserName(CommandContext context) {
+        return context.getUpdate()
+                .getMessage()
                 .getChat()
                 .getUserName();
     }

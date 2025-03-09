@@ -1,9 +1,10 @@
-package com.github.lltal.observer.services.input;
+package com.github.lltal.observer.services.base;
 
 import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.enumeration.AdminActionType;
+import com.github.lltal.observer.services.input.InputServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 

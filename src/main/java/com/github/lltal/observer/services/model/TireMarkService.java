@@ -3,6 +3,7 @@ package com.github.lltal.observer.services.model;
 import com.github.lltal.observer.input.dto.TireMarkDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.output.TireMarkRepo;
+import com.github.lltal.observer.services.base.ModelService;
 import com.github.lltal.observer.services.builder.TireMarkBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

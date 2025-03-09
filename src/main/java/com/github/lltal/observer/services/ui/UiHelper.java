@@ -11,9 +11,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.Collection;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UiHelper {
+    public static final Pattern phoneNumber = Pattern.compile("^\\+79\\d{9}$");
 
     public void closeCb(CommandContext context) {
         AnswerCallbackQuery answer = AnswerCallbackQuery
@@ -55,5 +58,10 @@ public class UiHelper {
                 .chatId(chatId)
                 .text(text)
                 .build();
+    }
+
+    public boolean matchPhoneNumber(String candidate) {
+        Matcher matcher = phoneNumber.matcher(candidate);
+        return matcher.find();
     }
 }

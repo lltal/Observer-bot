@@ -7,9 +7,9 @@ import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.enumeration.Season;
 import com.github.lltal.observer.output.TireMarkRepo;
 import com.github.lltal.observer.output.TireModelRepo;
+import com.github.lltal.observer.services.base.ModelService;
 import com.github.lltal.observer.services.builder.TireModelBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

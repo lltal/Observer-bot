@@ -4,10 +4,10 @@ import com.github.lltal.filler.shared.ifc.AbstractResolver;
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.filler.starter.command.CommandContext;
-import com.github.lltal.observer.input.dto.TireTypeSizeDto;
 import com.github.lltal.observer.input.dto.UserDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.exception.EmptyListException;
+import com.github.lltal.observer.services.base.InputService;
 import com.github.lltal.observer.services.builder.UserBuilder;
 import com.github.lltal.observer.services.model.UserService;
 import com.github.lltal.observer.services.parser.ContextParser;
@@ -87,6 +87,10 @@ public class UserInputService implements InputService {
             return true;
         }
         return false;
+    }
+
+    public boolean hasUser(String tgId) {
+        return userService.contains(tgId);
     }
 
     private BotApiMethod<?> createUsersKeyboard(CommandContext context) {

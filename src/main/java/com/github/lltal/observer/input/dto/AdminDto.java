@@ -56,7 +56,7 @@ public class AdminDto implements Countable {
              @Button(userView = ADD, cbValue = ADD),
              @Button(userView = REMOVE, cbValue = REMOVE)
      })
-     @FilleeField(text = "Какое действие выполнить", customFillHandler = AdminActionTypeHandler.HANDLER_BEAN_NAME)
+     @FilleeField(text = "Какое действие выполнить?", customFillHandler = AdminActionTypeHandler.HANDLER_BEAN_NAME)
      private AdminActionType actionType;
 
      @FilleeField

@@ -7,6 +7,7 @@ import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.dto.TireTypeSizeDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.exception.EmptyListException;
+import com.github.lltal.observer.services.base.InputService;
 import com.github.lltal.observer.services.builder.TireTypeSizeBuilder;
 import com.github.lltal.observer.services.model.TireTypeSizeService;
 import com.github.lltal.observer.services.parser.ContextParser;
@@ -89,7 +90,7 @@ public class TireTypeSizeInputService implements InputService {
         return false;
     }
 
-    private BotApiMethod<?> createTypeSizeKeyboard(CommandContext context) {
+    public BotApiMethod<?> createTypeSizeKeyboard(CommandContext context) {
         Collection<String> typeSizes = tireTypeSizeService.findAllTireSize();
         Collection<Supplier<String>> suppliers = new ArrayList<>();
         typeSizes.forEach((n) -> suppliers.add(() -> n));

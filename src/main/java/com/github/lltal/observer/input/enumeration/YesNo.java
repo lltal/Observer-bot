@@ -11,5 +11,7 @@ public enum YesNo {
     @ConverteeField(stringView = CommonConstants.YES)
     YES,
     @ConverteeField(stringView = CommonConstants.NO)
-    NO
+    NO,
+    @ConverteeField(stringView = CommonConstants.CLOSE)
+    CLOSE
 }

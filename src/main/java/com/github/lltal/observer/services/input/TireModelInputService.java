@@ -12,6 +12,7 @@ import com.github.lltal.observer.input.dto.TireModelDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.enumeration.Season;
 import com.github.lltal.observer.input.exception.EmptyListException;
+import com.github.lltal.observer.services.base.InputService;
 import com.github.lltal.observer.services.builder.TireModelBuilder;
 import com.github.lltal.observer.services.model.TireMarkService;
 import com.github.lltal.observer.services.model.TireModelService;
@@ -32,7 +33,7 @@ import static com.github.lltal.observer.input.constant.TireModelConstants.TIRE_M
 import static com.github.lltal.observer.input.constant.TireModelConstants.TIRE_MODEL_SENDER_NAME;
 
 @Service
-public class TireModelInputService implements InputService{
+public class TireModelInputService implements InputService {
     @Autowired
     private TireModelBuilder builder;
     @Autowired
@@ -55,6 +56,8 @@ public class TireModelInputService implements InputService{
     @Autowired
     @Qualifier(CommonConstants.SEASON_CONVERTER_NAME)
     private AbstractConverter<Season> converter;
+    @Autowired
+    private TireMarkInputService markInputService;
 
     @Override
     public AdminActionObjectType getActionObjectType() {
@@ -69,7 +72,7 @@ public class TireModelInputService implements InputService{
     @Override
     public BotApiMethod<?> getNextCreationMessage(Countable manageableDto, CommandContext context) {
         if (manageableDto.getCount() == 0) {
-            return createMarkSelectionMessage(context);
+            return markInputService.createMarksKeyboard(context);
         } else if (manageableDto.getCount() == 1) {
             helper.closeCb(context);
         }
@@ -80,14 +83,15 @@ public class TireModelInputService implements InputService{
     @Override
     public BotApiMethod<?> getNextDeletionMessage(Countable manageableDto, CommandContext context) {
         if (manageableDto.getCount() == 0) {
-            return createMarkSelectionMessage(context);
+            return markInputService.createMarksKeyboard(context);
         }
         if (manageableDto.getCount() == 1) {
             sender.closeCb(context);
             return sender.getNextMessage(manageableDto, parser.getChatId(context));
         } else if (manageableDto.getCount() == 2) {
             sender.closeCb(context);
-            return createModelSelectionMessage(context, (TireModelDto) manageableDto);
+            TireModelDto modelDto = (TireModelDto) manageableDto;
+            return createModelSelectionMessage(context, modelDto.getMarkDto().getName(), modelDto.getSeason());
         }
 
         return SendMessage.builder()
@@ -122,29 +126,8 @@ public class TireModelInputService implements InputService{
         return manageableDto.getCount() >= 3;
     }
 
-    private void setMark(Countable manageableDto, CommandContext context) {
-        TireMarkDto markDto = markService.find(context.getName());
-        ((TireModelDto)manageableDto).setMarkDto(markDto);
-        manageableDto.setCount(manageableDto.getCount() + 1);
-    }
-
-    private BotApiMethod<?> createMarkSelectionMessage(CommandContext context) {
-        Collection<String> names = markService.findAllNames();
-        Collection<Supplier<String>> suppliers = new ArrayList<>();
-        names.forEach((n) -> suppliers.add(() -> n));
-
-        if (names.isEmpty())
-            throw new EmptyListException("Список марок пуст");
-
-        return helper.createKeyboard(
-                "Выбери марку",
-                parser.getChatId(context),
-                suppliers
-        );
-    }
-
-    private BotApiMethod<?> createModelSelectionMessage(CommandContext context, TireModelDto modelDto) {
-        Collection<String> names = modelService.findAllNames(modelDto.getMarkDto().getName(), modelDto.getSeason());
+    public BotApiMethod<?> createModelSelectionMessage(CommandContext context, String markName, Season season) {
+        Collection<String> names = modelService.findAllNames(markName, season);
         Collection<Supplier<String>> suppliers = new ArrayList<>();
         names.forEach((n) -> suppliers.add(() -> n));
 
@@ -156,6 +139,12 @@ public class TireModelInputService implements InputService{
                 parser.getChatId(context),
                 suppliers
         );
+    }
+
+    private void setMark(Countable manageableDto, CommandContext context) {
+        TireMarkDto markDto = markService.find(context.getName());
+        ((TireModelDto)manageableDto).setMarkDto(markDto);
+        manageableDto.setCount(manageableDto.getCount() + 1);
     }
 }
 

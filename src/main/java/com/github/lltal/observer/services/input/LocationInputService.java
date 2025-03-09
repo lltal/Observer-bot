@@ -7,6 +7,7 @@ import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.dto.LocationDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.exception.EmptyListException;
+import com.github.lltal.observer.services.base.InputService;
 import com.github.lltal.observer.services.builder.LocationBuilder;
 import com.github.lltal.observer.services.model.LocationService;
 import com.github.lltal.observer.services.parser.ContextParser;

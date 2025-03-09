@@ -9,7 +9,7 @@ import com.github.lltal.filler.shared.ifc.CustomFilleeHandler;
 import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.dto.AdminDto;
 import com.github.lltal.observer.input.enumeration.AdminActionType;
-import com.github.lltal.observer.services.input.InputService;
+import com.github.lltal.observer.services.base.InputService;
 import com.github.lltal.observer.services.input.InputServices;
 import com.github.lltal.observer.services.parser.ContextParser;
 import org.springframework.beans.factory.annotation.Autowired;

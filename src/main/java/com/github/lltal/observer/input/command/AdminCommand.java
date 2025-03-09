@@ -13,7 +13,7 @@ import com.github.lltal.observer.input.dto.AdminDto;
 import com.github.lltal.observer.input.enumeration.AdminActionType;
 import com.github.lltal.observer.input.exception.DuplicateValueException;
 import com.github.lltal.observer.input.exception.EmptyListException;
-import com.github.lltal.observer.services.input.InputService;
+import com.github.lltal.observer.services.base.InputService;
 import com.github.lltal.observer.services.input.InputServices;
 import com.github.lltal.observer.services.ui.UiHelper;
 import lombok.extern.slf4j.Slf4j;

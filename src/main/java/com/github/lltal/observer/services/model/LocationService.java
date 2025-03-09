@@ -3,16 +3,15 @@ package com.github.lltal.observer.services.model;
 import com.github.lltal.filler.shared.ifc.AbstractFiller;
 import com.github.lltal.filler.shared.ifc.AbstractResolver;
 import com.github.lltal.filler.shared.ifc.AbstractSender;
-import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.dto.LocationDto;
 import com.github.lltal.observer.output.LocationRepo;
+import com.github.lltal.observer.services.base.ModelService;
 import com.github.lltal.observer.services.builder.LocationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
 import java.util.Collection;
 

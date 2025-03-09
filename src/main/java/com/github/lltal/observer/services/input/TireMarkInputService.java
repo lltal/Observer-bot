@@ -7,6 +7,7 @@ import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.dto.TireMarkDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.exception.EmptyListException;
+import com.github.lltal.observer.services.base.InputService;
 import com.github.lltal.observer.services.builder.TireMarkBuilder;
 import com.github.lltal.observer.services.model.TireMarkService;
 import com.github.lltal.observer.services.parser.ContextParser;
@@ -87,7 +88,7 @@ public class TireMarkInputService implements InputService {
         return manageableDto.getCount() >= 1;
     }
 
-    private BotApiMethod<?> createMarksKeyboard(CommandContext context) {
+    public BotApiMethod<?> createMarksKeyboard(CommandContext context) {
         Collection<String> names = markService.findAllNames();
         Collection<Supplier<String>> suppliers = new ArrayList<>();
         names.forEach((n) -> suppliers.add(() -> n));
