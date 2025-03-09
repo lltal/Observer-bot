@@ -1,4 +1,3 @@
-
 package com.github.lltal.observer.output;
 
 import com.github.lltal.observer.entity.User;

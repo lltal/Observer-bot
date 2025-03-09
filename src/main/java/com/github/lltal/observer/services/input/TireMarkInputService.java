@@ -6,6 +6,7 @@ import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.dto.TireMarkDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
+import com.github.lltal.observer.input.exception.EmptyListException;
 import com.github.lltal.observer.services.builder.TireMarkBuilder;
 import com.github.lltal.observer.services.model.TireMarkService;
 import com.github.lltal.observer.services.parser.ContextParser;
@@ -52,11 +53,6 @@ public class TireMarkInputService implements InputService {
 
     @Override
     public BotApiMethod<?> getNextCreationMessage(Countable manageableDto, CommandContext context) {
-        if (manageableDto.getCount() == 0)
-            return createMarksKeyboard(context);
-        else if (manageableDto.getCount() == 1)
-            helper.closeCb(context);
-
         return sender.getNextMessage(manageableDto, parser.getChatId(context));
     }
 
@@ -77,8 +73,6 @@ public class TireMarkInputService implements InputService {
 
     @Override
     public boolean fillDto(Countable manageableDto, CommandContext context) {
-        if (manageableDto.getCount() == 1)
-            markService.create((TireMarkDto) manageableDto);
         resolver.resolve(manageableDto, context);
         return manageableDto.getCount() >= 1;
     }
@@ -97,6 +91,9 @@ public class TireMarkInputService implements InputService {
         Collection<String> names = markService.findAllNames();
         Collection<Supplier<String>> suppliers = new ArrayList<>();
         names.forEach((n) -> suppliers.add(() -> n));
+
+        if (names.isEmpty())
+            throw new EmptyListException("Список марок пуст");
 
         return helper.createKeyboard(
                 "Выбери марку",

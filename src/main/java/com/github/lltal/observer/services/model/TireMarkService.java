@@ -1,12 +1,12 @@
 package com.github.lltal.observer.services.model;
 
-import com.github.lltal.observer.entity.TireMark;
 import com.github.lltal.observer.input.dto.TireMarkDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.output.TireMarkRepo;
 import com.github.lltal.observer.services.builder.TireMarkBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -23,11 +23,7 @@ public class TireMarkService implements ModelService<TireMarkDto, String> {
 
     @Override
     public TireMarkDto find(String name) {
-        return builder.buildDto(repo.findByName(name));
-    }
-
-    public TireMark findWithoutConversion(String name) {
-        return repo.findByName(name);
+        return builder.buildDto(repo.findByName(name), false);
     }
 
     @Override
@@ -36,6 +32,7 @@ public class TireMarkService implements ModelService<TireMarkDto, String> {
     }
 
     @Override
+    @Transactional
     public void delete(String name) {
         repo.deleteByName(name);
     }

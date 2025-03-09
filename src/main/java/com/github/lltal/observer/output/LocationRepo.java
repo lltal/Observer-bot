@@ -13,4 +13,6 @@ public interface LocationRepo extends JpaRepository<Location, Long> {
 
     @Query(value = "select location.street from location", nativeQuery = true)
     Collection<String> findAllStreet();
+
+    boolean existsByStreet(String street);
 }

@@ -3,6 +3,7 @@ package com.github.lltal.observer.input.dto;
 import com.github.lltal.filler.shared.annotation.Fillee;
 import com.github.lltal.filler.shared.annotation.FilleeField;
 import com.github.lltal.filler.shared.ifc.Countable;
+import com.github.lltal.observer.input.handler.LocationStreetHandler;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ import static com.github.lltal.observer.input.constant.LocationConstants.LOCATIO
         resolverBeanName = LOCATION_RESOLVER_NAME
 )
 public class LocationDto implements Countable {
-    @FilleeField(text = "Введи улицу")
+    @FilleeField(text = "Введи улицу", customFillHandler = LocationStreetHandler.HANDLER_BEAN_NAME)
     private String street;
     @FilleeField(text = "Адрес успешно создан")
     private String finalMessage;

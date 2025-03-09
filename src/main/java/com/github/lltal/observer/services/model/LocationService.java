@@ -11,6 +11,7 @@ import com.github.lltal.observer.services.builder.LocationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
 import java.util.Collection;
@@ -54,6 +55,7 @@ public class LocationService implements ModelService<LocationDto, String> {
         return repo.findAllStreet();
     }
 
+    @Transactional
     @Override
     public void delete(String street) {
         repo.deleteByStreet(street);
@@ -62,5 +64,9 @@ public class LocationService implements ModelService<LocationDto, String> {
     @Override
     public AdminActionObjectType getActionObjectType() {
         return AdminActionObjectType.LOCATION;
+    }
+
+    public boolean contains(String street) {
+        return repo.existsByStreet(street);
     }
 }

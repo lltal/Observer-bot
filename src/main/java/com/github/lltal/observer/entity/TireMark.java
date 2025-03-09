@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ import java.util.Collection;
 @Table(
         name = "tire_mark",
         indexes = {
-                @Index(name = "idx_mark_name", columnList = "name")
+                @Index(name = "idx_mark_name", columnList = "name", unique = true),
         }
 )
 @NoArgsConstructor
@@ -36,6 +37,13 @@ public class TireMark {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "mark")
+    @OneToMany(
+            mappedBy = "mark",
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE,
+                    CascadeType.REMOVE
+            }
+    )
     private Collection<TireModel> models = new ArrayList<>();
 }

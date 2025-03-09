@@ -4,14 +4,11 @@ import com.github.lltal.filler.shared.ifc.AbstractResolver;
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.filler.starter.command.CommandContext;
-import com.github.lltal.observer.entity.TireTypeSize;
-import com.github.lltal.observer.input.dto.LocationDto;
 import com.github.lltal.observer.input.dto.TireTypeSizeDto;
-import com.github.lltal.observer.input.dto.UserDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
+import com.github.lltal.observer.input.exception.EmptyListException;
 import com.github.lltal.observer.services.builder.TireTypeSizeBuilder;
 import com.github.lltal.observer.services.model.TireTypeSizeService;
-import com.github.lltal.observer.services.model.UserService;
 import com.github.lltal.observer.services.parser.ContextParser;
 import com.github.lltal.observer.services.ui.UiHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +53,6 @@ public class TireTypeSizeInputService implements InputService {
 
     @Override
     public BotApiMethod<?> getNextCreationMessage(Countable manageableDto, CommandContext context) {
-        if (manageableDto.getCount() == 0) {
-            return createTypeSizeKeyboard(context);
-        } else if (manageableDto.getCount() == 1)
-            helper.closeCb(context);
-
         return sender.getNextMessage(manageableDto, parser.getChatId(context));
     }
 
@@ -82,8 +74,6 @@ public class TireTypeSizeInputService implements InputService {
 
     @Override
     public boolean fillDto(Countable manageableDto, CommandContext context) {
-        if (manageableDto.getCount() == 1)
-            tireTypeSizeService.create((TireTypeSizeDto) manageableDto);
         resolver.resolve(manageableDto, context);
         return manageableDto.getCount() >= 1;
     }
@@ -91,7 +81,7 @@ public class TireTypeSizeInputService implements InputService {
     @Override
     public boolean deleteIfCan(Countable manageableDto, CommandContext context) {
         if (manageableDto.getCount() == 0) {
-            ((UserDto) manageableDto).setTgId(context.getName());
+            ((TireTypeSizeDto) manageableDto).setTireSize(context.getName());
             manageableDto.setCount(manageableDto.getCount() + 1);
             tireTypeSizeService.delete(context.getName());
             return true;
@@ -100,9 +90,12 @@ public class TireTypeSizeInputService implements InputService {
     }
 
     private BotApiMethod<?> createTypeSizeKeyboard(CommandContext context) {
-        Collection<String> names = tireTypeSizeService.findAllTireSize();
+        Collection<String> typeSizes = tireTypeSizeService.findAllTireSize();
         Collection<Supplier<String>> suppliers = new ArrayList<>();
-        names.forEach((n) -> suppliers.add(() -> n));
+        typeSizes.forEach((n) -> suppliers.add(() -> n));
+
+        if (typeSizes.isEmpty())
+            throw new EmptyListException("Список размеров пуст");
 
         return helper.createKeyboard(
                 "Выбери типоразмер",

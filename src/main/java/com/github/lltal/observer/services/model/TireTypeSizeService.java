@@ -6,6 +6,7 @@ import com.github.lltal.observer.output.TireTypeSizeRepo;
 import com.github.lltal.observer.services.builder.TireTypeSizeBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -31,6 +32,7 @@ public class TireTypeSizeService implements ModelService<TireTypeSizeDto, String
     }
 
     @Override
+    @Transactional
     public void delete(String tireSize) {
         repo.deleteByTireSize(tireSize);
     }

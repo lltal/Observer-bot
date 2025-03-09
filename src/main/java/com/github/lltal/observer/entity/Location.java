@@ -1,8 +1,6 @@
 package com.github.lltal.observer.entity;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +18,7 @@ import javax.persistence.Table;
 @Table(
         name = "location",
         indexes = {
-                @Index(name = "idx_street", columnList = "street")
+                @Index(name = "idx_street", columnList = "street", unique = true)
         }
 )
 @NoArgsConstructor

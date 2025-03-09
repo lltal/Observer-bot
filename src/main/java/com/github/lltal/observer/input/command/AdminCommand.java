@@ -107,6 +107,12 @@ public class AdminCommand {
             context.getEngine().executeNotException(
                     sender.getNextMessage(adminDto, chatId)
             );
+        } catch (RuntimeException e) {
+            log.error("Exception during execution /admin command", e);
+            context.getEngine().executeNotException(
+                    helper.createMessage(chatId, "Выполнение команды завершено, возможно, ошибка в формате введенных данных")
+            );
+            userBotSession.stop();
         }
     }
 }

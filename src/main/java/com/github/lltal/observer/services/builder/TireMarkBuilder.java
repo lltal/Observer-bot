@@ -25,16 +25,17 @@ public class TireMarkBuilder {
         return TireMarkDto.builder().build();
     }
 
-    public TireMarkDto buildDto(TireMark model) {
+    public TireMarkDto buildDto(TireMark model, boolean withModels) {
         TireMarkDto markDto = new TireMarkDto();
         markDto.setName(model.getName());
-        markDto.setModels(modelBuilder.buildAllDto(model.getModels()));
+        if (withModels)
+            markDto.setModels(modelBuilder.buildAllDto(model.getModels()));
         return markDto;
     }
 
     public Collection<TireMarkDto> buildAllDto(Collection<TireMark> model) {
         return model.stream()
-                .map(this::buildDto)
+                .map((m) -> buildDto(m, false))
                 .toList();
     }
 }

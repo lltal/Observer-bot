@@ -2,21 +2,18 @@ package com.github.lltal.observer.services.builder;
 
 import com.github.lltal.observer.entity.TireModel;
 import com.github.lltal.observer.input.dto.TireModelDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 @Service
-@RequiredArgsConstructor
 public class TireModelBuilder {
-    private TireMarkBuilder markBuilder;
 
     public TireModel buildModel(TireModelDto dto) {
         TireModel tireModel = new TireModel();
         tireModel.setCode(dto.getCode());
         tireModel.setName(dto.getName());
-        tireModel.setMark(markBuilder.buildModel(dto.getMarkDto()));
+        tireModel.setSeason(dto.getSeason());
         return tireModel;
     }
 
@@ -29,6 +26,7 @@ public class TireModelBuilder {
         return TireModelDto.builder()
                 .code(model.getCode())
                 .name(model.getName())
+                .season(model.getSeason())
                 .build();
     }
 
