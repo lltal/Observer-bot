@@ -3,7 +3,6 @@ package com.github.lltal.observer.input.dto;
 import com.github.lltal.filler.shared.annotation.Fillee;
 import com.github.lltal.filler.shared.annotation.FilleeField;
 import com.github.lltal.filler.shared.ifc.Countable;
-import com.github.lltal.observer.input.enumeration.AdminActionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +25,11 @@ import static com.github.lltal.observer.input.constant.TireMarkConstants.TIRE_MA
         resolverBeanName = TIRE_MARK_RESOLVER_NAME
 )
 public class TireMarkDto implements Countable {
-    private AdminActionType actionType;
     @FilleeField(text = "Введи название марки")
     private String name;
+    @FilleeField(text = "Марка успешно создана")
+    private String finalMessage;
+    @Builder.Default
     private Collection<TireModelDto> models = new ArrayList<>();
     private int count;
 

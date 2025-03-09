@@ -11,19 +11,23 @@ import com.github.lltal.filler.starter.session.UserBotSession;
 import com.github.lltal.observer.config.BotProperties;
 import com.github.lltal.observer.input.dto.AdminDto;
 import com.github.lltal.observer.input.enumeration.AdminActionType;
+import com.github.lltal.observer.input.exception.DuplicateValueException;
+import com.github.lltal.observer.input.exception.EmptyListException;
 import com.github.lltal.observer.services.input.InputService;
 import com.github.lltal.observer.services.input.InputServices;
+import com.github.lltal.observer.services.ui.UiHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_RESOLVER_NAME;
 import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_SENDER_NAME;
 
 @CommandNames("/admin")
 @Component
+@Slf4j
 public class AdminCommand {
     @Autowired
     private BotProperties properties;
@@ -35,6 +39,8 @@ public class AdminCommand {
     private AbstractSender sender;
     @Autowired
     private InputServices inputServices;
+    @Autowired
+    private UiHelper helper;
 
     @CommandFirst
     public void execFirst(
@@ -44,13 +50,16 @@ public class AdminCommand {
             UserBotSession userBotSession
     ) {
         if (!properties.getAdmins().contains(userId)) {
-            context.getEngine().executeNotException(forbid(chatId));
+            context.getEngine().executeNotException(
+                    helper.createMessage(chatId, "Ты не админ, хуй соси")
+            );
         }
 
         AdminDto dto = new AdminDto();
         userBotSession.setData(dto);
-        BotApiMethod<?> message = sender.getNextMessage(dto, chatId);
-        context.getEngine().executeNotException(message);
+        context.getEngine().executeNotException(
+                sender.getNextMessage(dto, chatId)
+        );
     }
 
     @CommandOther
@@ -61,28 +70,43 @@ public class AdminCommand {
     ) {
         AdminDto adminDto = (AdminDto) userBotSession.getData();
 
-        if (adminDto.getNewValue() == null)
-            resolver.resolve(adminDto, context);
+        try {
+            if (adminDto.getCount() < 3) {
+                resolver.resolve(adminDto, context);
+                return;
+            }
 
-        InputService service = inputServices.getService(adminDto.getObjectType());
+            InputService service = inputServices.getService(adminDto.getObjectType());
 
-        BotApiMethod<?> message;
-        if (adminDto.getActionType() == AdminActionType.REMOVE)
-            message = service.delete(context);
-        else {
-            service.fillDto(adminDto.getNewValue(), context);
-            message = service.getNextCreationMessage(adminDto.getNewValue(), context);
+            BotApiMethod<?> message;
+            boolean isComplete;
+            if (adminDto.getActionType() == AdminActionType.REMOVE) {
+                isComplete = service.deleteIfCan(adminDto.getNewValue(), context);
+                message = service.getNextDeletionMessage(adminDto.getNewValue(), context);
+            }
+            else {
+                isComplete = service.fillDto(adminDto.getNewValue(), context);
+                message = service.getNextCreationMessage(adminDto.getNewValue(), context);
+            }
+
+            context.getEngine().executeNotException(message);
+
+            if (isComplete) {
+                adminDto.setCount(0);
+                context.getEngine().executeNotException(
+                        sender.getNextMessage(adminDto, chatId)
+                );
+            }
+
+        } catch (EmptyListException | DuplicateValueException e) {
+            log.error("Exception during execution /admin command", e);
+            context.getEngine().executeNotException(
+                    helper.createMessage(chatId, e.getMessage())
+            );
+            adminDto.setCount(0);
+            context.getEngine().executeNotException(
+                    sender.getNextMessage(adminDto, chatId)
+            );
         }
-
-        context.getEngine().executeNotException(message);
-    }
-
-    private SendMessage forbid(Long chatId)
-    {
-        return SendMessage
-                .builder()
-                .chatId(chatId)
-                .text("Ты не админ, хуй соси")
-                .build();
     }
 }

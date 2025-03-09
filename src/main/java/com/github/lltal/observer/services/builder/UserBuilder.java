@@ -10,9 +10,9 @@ import java.util.Collection;
 public class UserBuilder {
 
     public User buildModel(UserDto dto) {
-        return User.builder()
-                .tgId(dto.getTgId())
-                .build();
+        User user = new User();
+        user.setTgId(dto.getTgId());
+        return user;
     }
 
     public UserDto buildDto(User model) {
@@ -25,7 +25,6 @@ public class UserBuilder {
         return UserDto.builder()
                 .build();
     }
-
 
     public Collection<UserDto> buildAllDto(Collection<User> model) {
         return model.stream()

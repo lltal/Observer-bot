@@ -1,5 +1,6 @@
 package com.github.lltal.observer.services.model;
 
+import com.github.lltal.observer.entity.TireMark;
 import com.github.lltal.observer.input.dto.TireMarkDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.output.TireMarkRepo;
@@ -23,6 +24,10 @@ public class TireMarkService implements ModelService<TireMarkDto, String> {
     @Override
     public TireMarkDto find(String name) {
         return builder.buildDto(repo.findByName(name));
+    }
+
+    public TireMark findWithoutConversion(String name) {
+        return repo.findByName(name);
     }
 
     @Override

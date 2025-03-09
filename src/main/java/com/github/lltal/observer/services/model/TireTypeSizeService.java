@@ -39,4 +39,8 @@ public class TireTypeSizeService implements ModelService<TireTypeSizeDto, String
     public AdminActionObjectType getActionObjectType() {
         return AdminActionObjectType.TYPE_SIZE;
     }
+
+    public Collection<String> findAllTireSize() {
+        return repo.findAllTireSize();
+    }
 }

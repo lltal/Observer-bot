@@ -1,8 +1,6 @@
 package com.github.lltal.observer.entity;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,9 +26,8 @@ import javax.persistence.Table;
                 @Index(name = "idx_model_name", columnList = "name")
         }
 )
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class TireModel {
 
     @Id

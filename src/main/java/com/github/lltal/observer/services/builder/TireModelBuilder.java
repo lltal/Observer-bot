@@ -13,11 +13,11 @@ public class TireModelBuilder {
     private TireMarkBuilder markBuilder;
 
     public TireModel buildModel(TireModelDto dto) {
-        return TireModel.builder()
-                .code(dto.getCode())
-                .name(dto.getName())
-                .mark(markBuilder.buildModel(dto.getMarkDto()))
-                .build();
+        TireModel tireModel = new TireModel();
+        tireModel.setCode(dto.getCode());
+        tireModel.setName(dto.getName());
+        tireModel.setMark(markBuilder.buildModel(dto.getMarkDto()));
+        return tireModel;
     }
 
     public TireModelDto buildDto() {

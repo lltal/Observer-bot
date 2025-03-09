@@ -4,6 +4,7 @@ import com.github.lltal.filler.shared.ifc.AbstractResolver;
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.filler.starter.command.CommandContext;
+import com.github.lltal.observer.input.dto.TireMarkDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.services.builder.TireMarkBuilder;
 import com.github.lltal.observer.services.model.TireMarkService;
@@ -51,38 +52,56 @@ public class TireMarkInputService implements InputService {
 
     @Override
     public BotApiMethod<?> getNextCreationMessage(Countable manageableDto, CommandContext context) {
+        if (manageableDto.getCount() == 0)
+            return createMarksKeyboard(context);
+        else if (manageableDto.getCount() == 1)
+            helper.closeCb(context);
+
         return sender.getNextMessage(manageableDto, parser.getChatId(context));
     }
 
     @Override
-    public BotApiMethod<?> getNextDeletionMessage(Long chatId) {
+    public BotApiMethod<?> getNextDeletionMessage(Countable manageableDto, CommandContext context) {
+        if (manageableDto.getCount() == 0) {
+            return createMarksKeyboard(context);
+        } else if (manageableDto.getCount() == 1)
+            helper.closeCb(context);
+
+        return SendMessage.builder()
+                .chatId(parser.getChatId(context))
+                .text(
+                        String.format("Марка с именем: \"%s\" успешно удалена", context.getName())
+                )
+                .build();
+    }
+
+    @Override
+    public boolean fillDto(Countable manageableDto, CommandContext context) {
+        if (manageableDto.getCount() == 1)
+            markService.create((TireMarkDto) manageableDto);
+        resolver.resolve(manageableDto, context);
+        return manageableDto.getCount() >= 1;
+    }
+
+    @Override
+    public boolean deleteIfCan(Countable manageableDto, CommandContext context) {
+        if (manageableDto.getCount() == 0) {
+            ((TireMarkDto) manageableDto).setName(context.getName());
+            manageableDto.setCount(manageableDto.getCount() + 1);
+            markService.delete(context.getName());
+        }
+        return manageableDto.getCount() >= 1;
+    }
+
+    private BotApiMethod<?> createMarksKeyboard(CommandContext context) {
         Collection<String> names = markService.findAllNames();
         Collection<Supplier<String>> suppliers = new ArrayList<>();
         names.forEach((n) -> suppliers.add(() -> n));
 
         return helper.createKeyboard(
-                "Какую марку удалить?",
-                chatId,
+                "Выбери марку",
+                parser.getChatId(context),
                 suppliers
         );
-    }
-
-    @Override
-    public void fillDto(Countable manageableDto, CommandContext context) {
-        resolver.resolve(manageableDto, context);
-    }
-
-    @Override
-    public BotApiMethod<?> delete(CommandContext context) {
-        helper.closeCb(context);
-        String name = context.getName();
-        markService.delete(name);
-
-        return SendMessage.builder()
-                .chatId(parser.getChatId(context))
-                .text(
-                        String.format("Марка с именем: \"%s\" успешно удалена", name)
-                )
-                .build();
     }
 }

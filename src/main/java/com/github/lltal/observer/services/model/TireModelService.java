@@ -1,6 +1,6 @@
 package com.github.lltal.observer.services.model;
 
-
+import com.github.lltal.observer.entity.TireMark;
 import com.github.lltal.observer.input.dto.TireModelDto;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.output.TireModelRepo;
@@ -39,5 +39,9 @@ public class TireModelService implements ModelService<TireModelDto, String> {
     @Override
     public AdminActionObjectType getActionObjectType() {
         return AdminActionObjectType.MODEL;
+    }
+
+    public void delete(String name, TireMark mark) {
+        repo.deleteByNameAndMark(name, mark);
     }
 }

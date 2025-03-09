@@ -50,6 +50,10 @@ public class LocationService implements ModelService<LocationDto, String> {
         return builder.buildAllDto(repo.findAll());
     }
 
+    public Collection<String> findAllStreets() {
+        return repo.findAllStreet();
+    }
+
     @Override
     public void delete(String street) {
         repo.deleteByStreet(street);

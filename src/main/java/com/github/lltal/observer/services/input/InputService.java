@@ -19,9 +19,9 @@ public interface InputService {
 
     BotApiMethod<?> getNextCreationMessage(Countable manageableDto, CommandContext context);
 
-    BotApiMethod<?> getNextDeletionMessage(Long chatId);
+    BotApiMethod<?> getNextDeletionMessage(Countable manageableDto, CommandContext context);
 
-    void fillDto(Countable manageableDto, CommandContext context);
+    boolean fillDto(Countable manageableDto, CommandContext context);
 
-    BotApiMethod<?> delete(CommandContext context);
+    boolean deleteIfCan(Countable manageableDto, CommandContext context);
 }

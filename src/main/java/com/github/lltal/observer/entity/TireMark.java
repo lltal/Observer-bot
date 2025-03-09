@@ -2,7 +2,6 @@ package com.github.lltal.observer.entity;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +27,6 @@ import java.util.Collection;
 )
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class TireMark {
 
     @Id

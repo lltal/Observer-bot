@@ -10,9 +10,9 @@ import java.util.Collection;
 public class LocationBuilder {
 
     public Location buildModel(LocationDto dto) {
-        return Location.builder()
-                .street(dto.getStreet())
-                .build();
+        Location location = new Location();
+        location.setStreet(dto.getStreet());
+        return location;
     }
 
     public LocationDto buildDto(Location model) {

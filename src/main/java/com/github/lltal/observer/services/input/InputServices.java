@@ -1,7 +1,6 @@
 package com.github.lltal.observer.services.input;
 
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
-import com.github.lltal.observer.services.model.ModelService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

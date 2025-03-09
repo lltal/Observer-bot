@@ -23,9 +23,8 @@ import javax.persistence.Table;
                 @Index(name = "idx_street", columnList = "street")
         }
 )
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Location {
 
     @Id

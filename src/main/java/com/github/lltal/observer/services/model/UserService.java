@@ -6,6 +6,7 @@ import com.github.lltal.observer.output.UserRepo;
 import com.github.lltal.observer.services.builder.UserBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -14,7 +15,6 @@ import java.util.Collection;
 public class UserService implements ModelService<UserDto, String>{
     private final UserRepo repo;
     private final UserBuilder builder;
-
 
     @Override
     public void create(UserDto dto) {
@@ -32,6 +32,7 @@ public class UserService implements ModelService<UserDto, String>{
     }
 
     @Override
+    @Transactional
     public void delete(String tgId) {
         repo.deleteByTgId(tgId);
     }
@@ -39,5 +40,13 @@ public class UserService implements ModelService<UserDto, String>{
     @Override
     public AdminActionObjectType getActionObjectType() {
         return AdminActionObjectType.USER_ID;
+    }
+
+    public Collection<String> findAllTgId() {
+        return repo.findAllTgId();
+    }
+
+    public boolean contains(String tgId) {
+        return repo.existsByTgId(tgId);
     }
 }

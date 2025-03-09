@@ -22,7 +22,7 @@ import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_RES
 import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_SENDER_NAME;
 import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_TYPE_CONVERTER_NAME;
 
-@Component(AdminActionObjectTypeHandler.HANDLER_BEAN_NAME)
+@Component(AdminActionTypeHandler.HANDLER_BEAN_NAME)
 public class AdminActionTypeHandler implements CustomFilleeHandler<AdminDto> {
     public static final String HANDLER_BEAN_NAME = "adminActionTypeHandler";
 
@@ -51,12 +51,14 @@ public class AdminActionTypeHandler implements CustomFilleeHandler<AdminDto> {
         InputService service = inputServices.getService(dto.getObjectType());
 
         Countable manageableDto = service.createManageableDto();
+
         dto.setNewValue(manageableDto);
+
         BotApiMethod<?> message;
         if (dto.getActionType() == AdminActionType.ADD) {
-            message = service.getNextCreationMessage(manageableDto, parser.getChatId(context));
+            message = service.getNextCreationMessage(manageableDto, context);
         } else {
-            message = service.getNextDeletionMessage(parser.getChatId(context));
+            message = service.getNextDeletionMessage(manageableDto, context);
         }
 
         context.getEngine().executeNotException(message);

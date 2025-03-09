@@ -10,9 +10,9 @@ import java.util.Collection;
 public class TireTypeSizeBuilder {
 
     public TireTypeSize buildModel(TireTypeSizeDto dto) {
-        return TireTypeSize.builder()
-                .tireSize(dto.getTireSize())
-                .build();
+        TireTypeSize tireTypeSize = new TireTypeSize();
+        tireTypeSize.setTireSize(dto.getTireSize());
+        return tireTypeSize;
     }
 
     public TireTypeSizeDto buildDto(TireTypeSize model) {

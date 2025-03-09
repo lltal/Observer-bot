@@ -48,4 +48,12 @@ public class UiHelper {
                 .chatId(chatId)
                 .build();
     }
+
+    public SendMessage createMessage(Long chatId, String text) {
+        return SendMessage
+                .builder()
+                .chatId(chatId)
+                .text(text)
+                .build();
+    }
 }
