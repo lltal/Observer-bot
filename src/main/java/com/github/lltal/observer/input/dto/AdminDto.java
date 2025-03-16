@@ -8,29 +8,22 @@ import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.enumeration.AdminActionType;
 import com.github.lltal.observer.input.enumeration.YesNo;
-import com.github.lltal.observer.input.handler.AdminActionObjectTypeHandler;
-import com.github.lltal.observer.input.handler.AdminActionTypeHandler;
-import com.github.lltal.observer.input.handler.AdminYesNoHandler;
 import lombok.Data;
 
-import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_FILLER_NAME;
-import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_RESOLVER_NAME;
-import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_SENDER_NAME;
-import static com.github.lltal.observer.input.constant.AdminConstants.ADD;
-import static com.github.lltal.observer.input.constant.AdminConstants.LOCATION;
-import static com.github.lltal.observer.input.constant.AdminConstants.MARK;
-import static com.github.lltal.observer.input.constant.AdminConstants.MODEL;
-import static com.github.lltal.observer.input.constant.AdminConstants.REMOVE;
-import static com.github.lltal.observer.input.constant.AdminConstants.TYPE_SIZE;
-import static com.github.lltal.observer.input.constant.AdminConstants.USER_ID;
-import static com.github.lltal.observer.input.constant.CommonConstants.NO;
-import static com.github.lltal.observer.input.constant.CommonConstants.YES;
+import static com.github.lltal.observer.config.constant.EnumStringView.ADD;
+import static com.github.lltal.observer.config.constant.EnumStringView.LOCATION;
+import static com.github.lltal.observer.config.constant.EnumStringView.MARK;
+import static com.github.lltal.observer.config.constant.EnumStringView.MODEL;
+import static com.github.lltal.observer.config.constant.EnumStringView.NO;
+import static com.github.lltal.observer.config.constant.EnumStringView.REMOVE;
+import static com.github.lltal.observer.config.constant.EnumStringView.TYPE_SIZE;
+import static com.github.lltal.observer.config.constant.EnumStringView.USER_ID;
+import static com.github.lltal.observer.config.constant.EnumStringView.YES;
+import static com.github.lltal.observer.config.constant.SenderName.ADMIN_SENDER_NAME;
 
 @Data
 @Fillee(
-        senderBeanName = ACTION_SENDER_NAME,
-        fillerBeanName = ACTION_FILLER_NAME,
-        resolverBeanName = ACTION_RESOLVER_NAME
+        senderBeanName = ADMIN_SENDER_NAME
 )
 public class AdminDto implements Countable {
      @Keyboard(
@@ -39,7 +32,7 @@ public class AdminDto implements Countable {
                      @Button(userView = NO, cbValue = NO)
              }
      )
-     @FilleeField(text = "Следующее действие?", customFillHandler = AdminYesNoHandler.HANDLER_BEAN_NAME)
+     @FilleeField(text = "Следующее действие?")
      private YesNo yesNo;
 
      @Keyboard(buttons = {
@@ -49,28 +42,28 @@ public class AdminDto implements Countable {
              @Button(userView = MARK, cbValue = MARK),
              @Button(userView = MODEL, cbValue = MODEL)
      })
-     @FilleeField(text = "С чем произвести действие?", customFillHandler = AdminActionObjectTypeHandler.HANDLER_BEAN_NAME)
+     @FilleeField(text = "С чем произвести действие?")
      private AdminActionObjectType objectType;
 
      @Keyboard(buttons = {
              @Button(userView = ADD, cbValue = ADD),
              @Button(userView = REMOVE, cbValue = REMOVE)
      })
-     @FilleeField(text = "Какое действие выполнить?", customFillHandler = AdminActionTypeHandler.HANDLER_BEAN_NAME)
+     @FilleeField(text = "Какое действие выполнить?")
      private AdminActionType actionType;
 
      @FilleeField
      private Countable newValue;
 
-     private int fillCount;
+     private int count;
 
      @Override
      public int getCount() {
-          return fillCount;
+          return count;
      }
 
      @Override
      public void setCount(int count) {
-          fillCount = count;
+          this.count = count;
      }
 }

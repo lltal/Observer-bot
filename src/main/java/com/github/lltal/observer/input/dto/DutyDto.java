@@ -6,24 +6,24 @@ import com.github.lltal.filler.shared.annotation.FilleeField;
 import com.github.lltal.filler.shared.annotation.Keyboard;
 import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.observer.input.enumeration.YesNo;
-import com.github.lltal.observer.input.handler.AdminYesNoHandler;
+import com.github.lltal.observer.service.front.ui.UiHelper;
 import lombok.Data;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.github.lltal.observer.input.constant.CommonConstants.NO;
-import static com.github.lltal.observer.input.constant.CommonConstants.YES;
-import static com.github.lltal.observer.input.constant.DutyConstants.DUTY_FILLER_NAME;
-import static com.github.lltal.observer.input.constant.DutyConstants.DUTY_RESOLVER_NAME;
-import static com.github.lltal.observer.input.constant.DutyConstants.DUTY_SENDER_NAME;
-
+import static com.github.lltal.observer.config.constant.EnumStringView.NO;
+import static com.github.lltal.observer.config.constant.EnumStringView.YES;
+import static com.github.lltal.observer.config.constant.SenderName.DUTY_SENDER_NAME;
 
 @Data
 @Fillee(
-        senderBeanName = DUTY_SENDER_NAME,
-        fillerBeanName = DUTY_FILLER_NAME,
-        resolverBeanName = DUTY_RESOLVER_NAME
+        senderBeanName = DUTY_SENDER_NAME
 )
+@Valid
 public class DutyDto implements Countable {
     private final Instant createdAt = Instant.now();
 
@@ -39,16 +39,20 @@ public class DutyDto implements Countable {
                     @Button(userView = NO, cbValue = NO)
             }
     )
-    @FilleeField(text = "Следующее колесо?", customFillHandler = AdminYesNoHandler.HANDLER_BEAN_NAME)
+    @FilleeField(text = "Следующее колесо?")
     private YesNo yesNo;
-    @FilleeField(text = "Новое колосо")
-    private TireDto tire;
+    @FilleeField(text = "Новое колесо")
+    private List<TireDto> tires = new ArrayList<>();
 
     private int count;
 
     @Override
     public int getCount() {
         return count;
+    }
+
+    public List<TireDto> getTires() {
+        return tires;
     }
 
     @Override

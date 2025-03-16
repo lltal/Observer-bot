@@ -2,14 +2,13 @@ package com.github.lltal.observer.input.enumeration;
 
 import com.github.lltal.converter.shared.annotation.Convertee;
 import com.github.lltal.converter.shared.annotation.ConverteeField;
-import com.github.lltal.observer.input.constant.AdminConstants;
+import com.github.lltal.observer.config.constant.EnumConverterName;
+import com.github.lltal.observer.config.constant.EnumStringView;
 
-import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_TYPE_CONVERTER_NAME;
-
-@Convertee(converterBeanName = ACTION_TYPE_CONVERTER_NAME)
+@Convertee(converterBeanName = EnumConverterName.ADMIN_ACTION_TYPE_CONVERTER_NAME)
 public enum AdminActionType {
-    @ConverteeField(stringView = AdminConstants.ADD)
+    @ConverteeField(stringView = EnumStringView.ADD)
     ADD,
-    @ConverteeField(stringView = AdminConstants.REMOVE)
+    @ConverteeField(stringView = EnumStringView.REMOVE)
     REMOVE
 }

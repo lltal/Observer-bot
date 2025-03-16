@@ -1,6 +1,6 @@
 package com.github.lltal.observer.output;
 
-import com.github.lltal.observer.entity.Location;
+import com.github.lltal.observer.model.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

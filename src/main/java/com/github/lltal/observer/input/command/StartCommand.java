@@ -8,27 +8,25 @@ import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.filler.starter.session.UserBotSession;
 import com.github.lltal.observer.input.dto.DutyDto;
 import com.github.lltal.observer.input.dto.TireDto;
-import com.github.lltal.observer.services.base.DutyService;
-import com.github.lltal.observer.services.base.TireService;
-import com.github.lltal.observer.services.input.UserInputService;
-import com.github.lltal.observer.services.parser.UpdateParser;
+import com.github.lltal.observer.service.front.base.internal.DutyFrontService;
+import com.github.lltal.observer.service.front.base.internal.TireFrontService;
+import com.github.lltal.observer.service.front.base.internal.UserPrivateFrontService;
+import com.github.lltal.observer.service.front.ui.UiHelper;
+import com.github.lltal.observer.service.front.ui.UpdateParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 @CommandNames("/start")
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class StartCommand {
-    @Autowired
-    private UserInputService userInputService;
-    @Autowired
-    private UpdateParser updateParser;
-    @Autowired
-    private DutyService dutyService;
-    @Autowired
-    private TireService tireService;
+    private final UserPrivateFrontService userInputService;
+    private final UpdateParser updateParser;
+    private final DutyFrontService dutyFrontService;
+    private final TireFrontService tireFrontService;
+    private final UiHelper helper;
 
     @CommandFirst
     public void execFirst(
@@ -38,16 +36,19 @@ public class StartCommand {
     ) {
         if (!userInputService.hasUser(
                 updateParser.getUserName(context)
-        )) {
-            SendMessage.builder()
-                    .chatId(chatId)
-                    .text("Тебя нет в белом листе пользователей бота, хуй соси")
-                    .build();
+            )
+        ) {
+            context.getEngine().executeNotException(
+                    helper.createMessage(
+                            chatId,
+                            "Тебя нет в белом листе пользователей бота, хуй соси"
+                    )
+            );
+        } else {
+            DutyDto dto = new DutyDto();
+            userBotSession.setData(dto);
+            dutyFrontService.sendNextMessage(dto, context);
         }
-        DutyDto dto = new DutyDto();
-        context.getEngine().executeNotException(
-            dutyService.getNextMessage(dto, context)
-        );
     }
 
     @CommandOther
@@ -56,36 +57,39 @@ public class StartCommand {
             @ParamName("chatId") Long chatId,
             UserBotSession userBotSession
     ) {
-        DutyDto dto = (DutyDto) userBotSession.getData();
-
-        if (dto.getCount() <= 3) {
-            dutyService.fillDto(dto, context);
-            context.getEngine().executeNotException(
-                    dutyService.getNextMessage(dto, context)
-            );
-        }
-
         try {
-            TireDto tireDto = dto.getTire();
-            context.getEngine().executeNotException(
-                    tireService.getNextMessage(tireDto, context)
-            );
-            boolean isComplete = tireService.fillDto(tireDto, context);
-            if (isComplete) {
-                dto.setCount(3);
-                context.getEngine().executeNotException(
-                        dutyService.getNextMessage(dto, context)
-                );
+            DutyDto dutyDto = (DutyDto) userBotSession.getData();
+
+            if (!dutyFrontService.isFullFill(dutyDto)) {
+                dutyFrontService.fillDto(dutyDto, context);
+                if (!dutyFrontService.isFullFill(dutyDto))
+                    dutyFrontService.sendNextMessage(dutyDto, context);
+                return;
             }
+
+            TireDto tireDto = dutyDto.getTires().get(dutyDto.getTires().size() - 1);
+
+            tireFrontService.fillDto(tireDto, context);
+            if (!tireFrontService.isFullFill(tireDto))
+                tireFrontService.sendNextMessage(tireDto, context);
+
+            if (tireFrontService.isFullFill(tireDto)) {
+                dutyFrontService.movePointerToYesNo(dutyDto);
+                if (!dutyFrontService.isFullFill(dutyDto))
+                    dutyFrontService.sendNextMessage(dutyDto, context);
+            }
+
         } catch (RuntimeException e) {
             log.error("Исключение во время выполнения команды /start", e);
             context.getEngine().executeNotException(
-                    SendMessage.builder()
-                            .chatId(chatId)
-                            .text("Что-то пошло не так. Попробуй начать заново (Введи /start)")
-                            .build()
+                    helper.createMessage(
+                            chatId,
+                            "Что-то пошло не так. Попробуй начать заново"
+                    )
             );
-            userBotSession.stop();
+            DutyDto dutyDto = new DutyDto();
+            userBotSession.setData(dutyDto);
+            dutyFrontService.sendNextMessage(dutyDto, context);
         }
     }
 }

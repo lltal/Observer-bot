@@ -5,38 +5,33 @@ import com.github.lltal.filler.shared.annotation.Fillee;
 import com.github.lltal.filler.shared.annotation.FilleeField;
 import com.github.lltal.filler.shared.annotation.Keyboard;
 import com.github.lltal.filler.shared.ifc.Countable;
-import com.github.lltal.observer.input.constant.CommonConstants;
 import com.github.lltal.observer.input.enumeration.Season;
-import com.github.lltal.observer.input.handler.TireModelCodeHandler;
-import com.github.lltal.observer.input.handler.TireModelSeasonHandler;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import static com.github.lltal.observer.input.constant.TireModelConstants.TIRE_MODEL_FILLER_NAME;
-import static com.github.lltal.observer.input.constant.TireModelConstants.TIRE_MODEL_RESOLVER_NAME;
-import static com.github.lltal.observer.input.constant.TireModelConstants.TIRE_MODEL_SENDER_NAME;
+import static com.github.lltal.observer.config.constant.EnumStringView.SUMMER;
+import static com.github.lltal.observer.config.constant.EnumStringView.WINTER;
+import static com.github.lltal.observer.config.constant.SenderName.TIRE_MODEL_SENDER_NAME;
 
 @Data
-@Builder
 @Fillee(
-        senderBeanName = TIRE_MODEL_SENDER_NAME,
-        fillerBeanName = TIRE_MODEL_FILLER_NAME,
-        resolverBeanName = TIRE_MODEL_RESOLVER_NAME
+        senderBeanName = TIRE_MODEL_SENDER_NAME
 )
+@NoArgsConstructor
 public class TireModelDto implements Countable {
     @FilleeField
-    private TireMarkDto markDto;
+    private String markName;
     @Keyboard(
             buttons = {
-                    @Button(userView = CommonConstants.SUMMER, cbValue = CommonConstants.SUMMER),
-                    @Button(userView = CommonConstants.WINTER, cbValue = CommonConstants.WINTER)
+                    @Button(userView = SUMMER, cbValue = SUMMER),
+                    @Button(userView = WINTER, cbValue = WINTER)
             }
     )
-    @FilleeField(text = "Выбери сезон", customFillHandler = TireModelSeasonHandler.HANDLER_BEAN_NAME)
+    @FilleeField(text = "Выбери сезон")
     private Season season;
     @FilleeField(text = "Введи название модели")
     private String name;
-    @FilleeField(text = "Введи код 1с", customFillHandler = TireModelCodeHandler.HANDLER_BEAN_NAME)
+    @FilleeField(text = "Введи код 1с")
     private int code;
     @FilleeField(text = "Модель успешно создана")
     private String finalMessage;

@@ -1,6 +1,6 @@
 package com.github.lltal.observer.output;
 
-import com.github.lltal.observer.entity.TireTypeSize;
+import com.github.lltal.observer.model.TireTypeSize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,4 +14,6 @@ public interface TireTypeSizeRepo extends JpaRepository<TireTypeSize, Long> {
 
     @Query(value = "select tire_type_size.tire_size from tire_type_size", nativeQuery = true)
     Collection<String> findAllTireSize();
+
+    boolean existsByTireSize(String tireSize);
 }

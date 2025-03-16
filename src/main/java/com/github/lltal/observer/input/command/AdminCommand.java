@@ -1,7 +1,5 @@
 package com.github.lltal.observer.input.command;
 
-import com.github.lltal.filler.shared.ifc.AbstractResolver;
-import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.starter.annotation.CommandFirst;
 import com.github.lltal.filler.starter.annotation.CommandNames;
 import com.github.lltal.filler.starter.annotation.CommandOther;
@@ -10,37 +8,25 @@ import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.filler.starter.session.UserBotSession;
 import com.github.lltal.observer.config.BotProperties;
 import com.github.lltal.observer.input.dto.AdminDto;
-import com.github.lltal.observer.input.enumeration.AdminActionType;
 import com.github.lltal.observer.input.exception.DuplicateValueException;
 import com.github.lltal.observer.input.exception.EmptyListException;
-import com.github.lltal.observer.services.base.InputService;
-import com.github.lltal.observer.services.input.InputServices;
-import com.github.lltal.observer.services.ui.UiHelper;
+import com.github.lltal.observer.service.front.base.PrivateFrontService;
+import com.github.lltal.observer.service.front.base.PrivateFrontServices;
+import com.github.lltal.observer.service.front.base.internal.AdminFrontService;
+import com.github.lltal.observer.service.front.ui.UiHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-
-import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_RESOLVER_NAME;
-import static com.github.lltal.observer.input.constant.AdminConstants.ACTION_SENDER_NAME;
 
 @CommandNames("/admin")
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class AdminCommand {
-    @Autowired
-    private BotProperties properties;
-    @Autowired
-    @Qualifier(ACTION_RESOLVER_NAME)
-    private AbstractResolver resolver;
-    @Autowired
-    @Qualifier(ACTION_SENDER_NAME)
-    private AbstractSender sender;
-    @Autowired
-    private InputServices inputServices;
-    @Autowired
-    private UiHelper helper;
+    private final BotProperties properties;
+    private final PrivateFrontServices privateFrontServices;
+    private final UiHelper helper;
+    private final AdminFrontService adminFrontService;
 
     @CommandFirst
     public void execFirst(
@@ -53,13 +39,11 @@ public class AdminCommand {
             context.getEngine().executeNotException(
                     helper.createMessage(chatId, "Ты не админ, хуй соси")
             );
+        } else {
+            AdminDto dto = new AdminDto();
+            userBotSession.setData(dto);
+            adminFrontService.sendNextMessage(dto, context);
         }
-
-        AdminDto dto = new AdminDto();
-        userBotSession.setData(dto);
-        context.getEngine().executeNotException(
-                sender.getNextMessage(dto, chatId)
-        );
     }
 
     @CommandOther
@@ -68,34 +52,30 @@ public class AdminCommand {
             @ParamName("chatId") Long chatId,
             UserBotSession userBotSession
     ) {
-        AdminDto adminDto = (AdminDto) userBotSession.getData();
-
         try {
-            if (adminDto.getCount() < 3) {
-                resolver.resolve(adminDto, context);
+            AdminDto adminDto = (AdminDto) userBotSession.getData();
+
+            if (!adminFrontService.isFullFill(adminDto)) {
+                adminFrontService.fillDto(adminDto, context);
+                if (!adminFrontService.isFullFill(adminDto)) {
+                    adminFrontService.sendNextMessage(adminDto, context);
+                }
                 return;
             }
 
-            InputService service = inputServices.getService(adminDto.getObjectType());
+            PrivateFrontService service =
+                    privateFrontServices.getService(
+                            adminDto.getActionType(),
+                            adminDto.getObjectType()
+                    );
 
-            BotApiMethod<?> message;
-            boolean isComplete;
-            if (adminDto.getActionType() == AdminActionType.REMOVE) {
-                isComplete = service.deleteIfCan(adminDto.getNewValue(), context);
-                message = service.getNextDeletionMessage(adminDto.getNewValue(), context);
-            }
-            else {
-                isComplete = service.fillDto(adminDto.getNewValue(), context);
-                message = service.getNextCreationMessage(adminDto.getNewValue(), context);
-            }
+            service.fillDto(adminDto.getNewValue(), context);
+            if (!service.isFullFill(adminDto.getNewValue()))
+                service.sendNextMessage(adminDto.getNewValue(), context);
 
-            context.getEngine().executeNotException(message);
-
-            if (isComplete) {
-                adminDto.setCount(0);
-                context.getEngine().executeNotException(
-                        sender.getNextMessage(adminDto, chatId)
-                );
+            if (service.isFullFill(adminDto.getNewValue())) {
+                adminDto = newAdminDto(userBotSession);
+                adminFrontService.sendNextMessage(adminDto, context);
             }
 
         } catch (EmptyListException | DuplicateValueException e) {
@@ -103,16 +83,23 @@ public class AdminCommand {
             context.getEngine().executeNotException(
                     helper.createMessage(chatId, e.getMessage())
             );
-            adminDto.setCount(0);
-            context.getEngine().executeNotException(
-                    sender.getNextMessage(adminDto, chatId)
-            );
+            AdminDto adminDto = newAdminDto(userBotSession);
+            adminFrontService.sendNextMessage(adminDto, context);
         } catch (RuntimeException e) {
             log.error("Exception during execution /admin command", e);
-            context.getEngine().executeNotException(
-                    helper.createMessage(chatId, "Выполнение команды завершено, возможно, ошибка в формате введенных данных")
-            );
             userBotSession.stop();
+            context.getEngine().executeNotException(
+                    helper.createMessage(
+                            chatId,
+                            "Выполнение команды завершено, возможно, ошибка в формате введенных данных"
+                    )
+            );
         }
+    }
+
+    private AdminDto newAdminDto(UserBotSession session) {
+        AdminDto adminDto = new AdminDto();
+        session.setData(adminDto);
+        return adminDto;
     }
 }

@@ -1,7 +1,6 @@
 package com.github.lltal.observer.output;
 
-import com.github.lltal.observer.entity.TireMark;
-import com.github.lltal.observer.entity.TireModel;
+import com.github.lltal.observer.model.TireModel;
 import com.github.lltal.observer.input.enumeration.Season;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface TireModelRepo extends JpaRepository<TireModel, Long> {
+
     TireModel findByName(String name);
 
     @Query(value = "select trmo.name from tire_model trmo" +
@@ -31,6 +30,17 @@ public interface TireModelRepo extends JpaRepository<TireModel, Long> {
     )
     @Modifying(clearAutomatically = true)
     void deleteByNameAndMarkAndSeason(
+            @Param("modelName") String modelName,
+            @Param("markName") String markName,
+            @Param("season") Season season
+    );
+
+    @Query(value = "select * from tire_model trmo" +
+            " join tire_mark trma on trmo.mark_id = trma.id" +
+            " where trma.name = :markName and trmo.name = :modelName and trmo.season = :#{#season?.name()}",
+            nativeQuery = true
+    )
+    TireModel findByNameMarkAndSeason(
             @Param("modelName") String modelName,
             @Param("markName") String markName,
             @Param("season") Season season
