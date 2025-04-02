@@ -17,11 +17,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
+
 @CommandNames("/start")
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class StartCommand {
+    public static final String MOSCOW_TIMEZONE = "Europe/Moscow";
+    public static final int START_HOUR = 9;
+    public static final int END_HOUR = 22;
+
+
     private final UserPrivateFrontService userInputService;
     private final UpdateParser updateParser;
     private final DutyFrontService dutyFrontService;
@@ -38,16 +47,28 @@ public class StartCommand {
                 updateParser.getUserName(context)
             )
         ) {
-            context.getEngine().executeNotException(
+            helper.sendMessage(
+                    context,
                     helper.createMessage(
                             chatId,
                             "Тебя нет в белом листе пользователей бота, хуй соси"
                     )
             );
         } else {
-            DutyDto dto = new DutyDto();
-            userBotSession.setData(dto);
-            dutyFrontService.sendNextMessage(dto, context);
+
+            if (!isActive()) {
+                helper.sendMessage(
+                        context,
+                        helper.createMessage(
+                                chatId,
+                                "Бот доступен с 22 до 9 по мск"
+                        )
+                );
+            } else {
+                DutyDto dto = new DutyDto();
+                userBotSession.setData(dto);
+                dutyFrontService.sendNextMessage(dto, context);
+            }
         }
     }
 
@@ -91,5 +112,15 @@ public class StartCommand {
             userBotSession.setData(dutyDto);
             dutyFrontService.sendNextMessage(dutyDto, context);
         }
+    }
+
+private boolean isActive() {
+        Instant now = Instant.now();
+        LocalTime currentTime = LocalTime.ofInstant(now, ZoneId.of(MOSCOW_TIMEZONE).getRules().getOffset(now));
+
+        LocalTime startTime = LocalTime.of(START_HOUR, 0);
+        LocalTime endTime = LocalTime.of(END_HOUR, 0);
+
+        return !(currentTime.isAfter(startTime) && currentTime.isBefore(endTime));
     }
 }

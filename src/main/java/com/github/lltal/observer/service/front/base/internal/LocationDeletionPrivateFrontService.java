@@ -3,7 +3,7 @@ package com.github.lltal.observer.service.front.base.internal;
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.filler.starter.command.CommandContext;
-import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
+import com.github.lltal.observer.config.constant.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.dto.LocationDeletionDto;
 import com.github.lltal.observer.input.exception.EmptyListException;
 import com.github.lltal.observer.service.back.base.internal.LocationPrivateBackService;

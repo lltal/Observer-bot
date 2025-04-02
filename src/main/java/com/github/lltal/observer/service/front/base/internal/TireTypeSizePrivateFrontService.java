@@ -4,7 +4,7 @@ import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.shared.ifc.Countable;
 import com.github.lltal.filler.starter.command.CommandContext;
 import com.github.lltal.observer.input.dto.TireTypeSizeDto;
-import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
+import com.github.lltal.observer.config.constant.enumeration.AdminActionObjectType;
 import com.github.lltal.observer.input.exception.DuplicateValueException;
 import com.github.lltal.observer.service.back.base.internal.TireTypeSizePrivateBackService;
 import com.github.lltal.observer.service.front.base.PrivateFrontService;

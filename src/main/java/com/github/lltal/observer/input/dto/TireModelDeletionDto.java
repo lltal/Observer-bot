@@ -5,7 +5,7 @@ import com.github.lltal.filler.shared.annotation.Fillee;
 import com.github.lltal.filler.shared.annotation.FilleeField;
 import com.github.lltal.filler.shared.annotation.Keyboard;
 import com.github.lltal.filler.shared.ifc.Countable;
-import com.github.lltal.observer.input.enumeration.Season;
+import com.github.lltal.observer.config.constant.enumeration.Season;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

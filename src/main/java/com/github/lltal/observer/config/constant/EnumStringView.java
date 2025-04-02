@@ -16,6 +16,7 @@ public class EnumStringView {
     public static final String MARK = "марка";
     public static final String MODEL = "модель";
     public static final String TYPE_SIZE = "типоразмер";
+    public static final String LOAD_DATA = "выгрузить данные";
 
     // имена полей AdminActionType
     public static final String ADD = "добавить";

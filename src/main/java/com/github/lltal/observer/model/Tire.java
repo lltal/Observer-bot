@@ -42,20 +42,20 @@ public class Tire {
     @Column(nullable = false)
     private String carNumber;
     @ManyToOne(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             optional = false
     )
     @JoinColumn(name = "tire_model_id", referencedColumnName = "id")
     private TireModel tireModel;
     @ManyToOne(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             optional = false
     )
     @JoinColumn(name = "type_size_id", referencedColumnName = "id")
     private TireTypeSize typeSize;
     @ManyToOne(
             optional = false,
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
     @JoinColumn(name = "duty_id", referencedColumnName = "id")

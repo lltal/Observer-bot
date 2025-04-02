@@ -1,7 +1,7 @@
 package com.github.lltal.observer.service.front.base;
 
 import com.github.lltal.filler.shared.ifc.Countable;
-import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
+import com.github.lltal.observer.config.constant.enumeration.AdminActionObjectType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

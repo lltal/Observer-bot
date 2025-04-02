@@ -2,16 +2,12 @@ package com.github.lltal.observer.service.front.base.internal;
 
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.starter.command.CommandContext;
-import com.github.lltal.observer.input.exception.WrongFormatException;
-import com.github.lltal.observer.model.Duty;
-import com.github.lltal.observer.model.Tire;
-import com.github.lltal.observer.model.User;
 import com.github.lltal.observer.input.dto.DutyDto;
 import com.github.lltal.observer.input.dto.TireDto;
-import com.github.lltal.observer.input.enumeration.YesNo;
-import com.github.lltal.observer.input.enumeration.converter.YesNoConverter;
-import com.github.lltal.observer.output.DutyRepo;
-import com.github.lltal.observer.output.UserRepo;
+import com.github.lltal.observer.config.constant.enumeration.YesNo;
+import com.github.lltal.observer.config.constant.enumeration.converter.YesNoConverter;
+import com.github.lltal.observer.input.exception.WrongFormatException;
+import com.github.lltal.observer.service.back.base.internal.DutyBackService;
 import com.github.lltal.observer.service.front.base.FrontService;
 import com.github.lltal.observer.service.front.ui.ContextParser;
 import com.github.lltal.observer.service.front.ui.UiHelper;
@@ -24,9 +20,6 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import java.time.Instant;
-import java.util.Collection;
-
 import static com.github.lltal.observer.config.constant.SenderName.DUTY_SENDER_NAME;
 
 @Service
@@ -37,29 +30,12 @@ public class DutyFrontService implements FrontService<DutyDto> {
     private final ContextParser contextParser;
     private final UpdateParser updateParser;
     private final UiHelper helper;
-    private final DutyRepo dutyRepo;
-    private final UserRepo userRepo;
     private final TireFrontService tireFrontService;
+    private final DutyBackService dutyBackService;
+
     @Qualifier(DUTY_SENDER_NAME)
     @Autowired
     private AbstractSender sender;
-
-    public void save(DutyDto dutyDto) {
-        User user = userRepo.findByTgId(dutyDto.getTgId());
-        Duty duty = new Duty();
-        duty.setCreatedAt(dutyDto.getCreatedAt());
-        duty.setFio(dutyDto.getFio());
-        duty.setUser(user);
-        duty.setPhoneNumber(dutyDto.getPhoneNumber());
-        duty.setTires(
-                extractTires(dutyDto, duty)
-        );
-        dutyRepo.save(duty);
-    }
-
-    public Collection<Duty> findAllByDate(Instant date) {
-        return dutyRepo.findAllWhereCreatedAtBefore(date);
-    }
 
     @Override
     public boolean isFullFill(DutyDto dutyDto) {
@@ -152,7 +128,7 @@ public class DutyFrontService implements FrontService<DutyDto> {
                         .build()
         );
 
-        save(dutyDto);
+        dutyBackService.save(dutyDto);
 
         dutyDto.setCount(5);
 
@@ -160,12 +136,5 @@ public class DutyFrontService implements FrontService<DutyDto> {
         context.getUserBotSession().setData(dutyDto);
 
         sendNextMessage(dutyDto, context);
-    }
-
-    private Collection<Tire> extractTires(DutyDto dutyDto, Duty owner) {
-        return dutyDto.getTires()
-                .stream()
-                .map(t -> tireFrontService.createWithoutSave(t, owner))
-                .toList();
     }
 }

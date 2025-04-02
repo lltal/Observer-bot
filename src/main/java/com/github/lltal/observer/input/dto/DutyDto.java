@@ -5,12 +5,10 @@ import com.github.lltal.filler.shared.annotation.Fillee;
 import com.github.lltal.filler.shared.annotation.FilleeField;
 import com.github.lltal.filler.shared.annotation.Keyboard;
 import com.github.lltal.filler.shared.ifc.Countable;
-import com.github.lltal.observer.input.enumeration.YesNo;
-import com.github.lltal.observer.service.front.ui.UiHelper;
+import com.github.lltal.observer.config.constant.enumeration.YesNo;
 import lombok.Data;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

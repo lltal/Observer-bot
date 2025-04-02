@@ -43,7 +43,7 @@ public class Duty {
     @Column(nullable = false)
     private String fio;
     @ManyToOne(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             optional = false
     )
     @JoinColumn(name = "user_size_id", referencedColumnName = "id")

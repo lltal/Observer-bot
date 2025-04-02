@@ -2,18 +2,11 @@ package com.github.lltal.observer.service.front.base.internal;
 
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.starter.command.CommandContext;
-import com.github.lltal.observer.input.enumeration.YesNo;
-import com.github.lltal.observer.input.enumeration.converter.SeasonConverter;
-import com.github.lltal.observer.input.enumeration.converter.YesNoConverter;
-import com.github.lltal.observer.input.dto.DutyDto;
+import com.github.lltal.observer.config.constant.enumeration.YesNo;
+import com.github.lltal.observer.config.constant.enumeration.converter.SeasonConverter;
+import com.github.lltal.observer.config.constant.enumeration.converter.YesNoConverter;
 import com.github.lltal.observer.input.dto.TireDto;
 import com.github.lltal.observer.input.exception.WrongFormatException;
-import com.github.lltal.observer.model.Duty;
-import com.github.lltal.observer.model.Tire;
-import com.github.lltal.observer.model.TireModel;
-import com.github.lltal.observer.model.TireTypeSize;
-import com.github.lltal.observer.output.TireModelRepo;
-import com.github.lltal.observer.output.TireTypeSizeRepo;
 import com.github.lltal.observer.service.front.base.FrontService;
 import com.github.lltal.observer.service.front.ui.ContextParser;
 import com.github.lltal.observer.service.front.ui.UiHelper;
@@ -36,27 +29,11 @@ public class TireFrontService implements FrontService<TireDto> {
     private final TireModelDeletionPrivateFrontService modelDeletionFrontService;
     private final TireTypeSizeDeletionPrivateFrontService typeSizeFrontService;
     private final UiHelper helper;
-    private final TireModelRepo tireModelRepo;
-    private final TireTypeSizeRepo tireTypeSizeRepo;
     private final YesNoConverter yesNoConverter;
     private final SeasonConverter seasonConverter;
     @Autowired
     @Qualifier(TIRE_SENDER_NAME)
     private AbstractSender sender;
-
-    public Tire createWithoutSave(TireDto dto, Duty owner) {
-        TireModel tireModel = tireModelRepo.findByNameMarkAndSeason(
-                dto.getModelName(), dto.getMarkName(), dto.getSeason()
-        );
-        TireTypeSize typeSize = tireTypeSizeRepo.findByTireSize(dto.getTypeSize());
-        Tire tire = new Tire();
-        tire.setCreatedAt(dto.getCreatedAt());
-        tire.setDuty(owner);
-        tire.setCarNumber(dto.getCarNumber());
-        tire.setTireModel(tireModel);
-        tire.setTypeSize(typeSize);
-        return tire;
-    }
 
     @Override
     public boolean isFullFill(TireDto tireDto) {

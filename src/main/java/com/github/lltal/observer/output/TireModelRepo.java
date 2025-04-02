@@ -1,7 +1,7 @@
 package com.github.lltal.observer.output;
 
 import com.github.lltal.observer.model.TireModel;
-import com.github.lltal.observer.input.enumeration.Season;
+import com.github.lltal.observer.config.constant.enumeration.Season;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

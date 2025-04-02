@@ -1,6 +1,6 @@
 package com.github.lltal.observer.model;
 
-import com.github.lltal.observer.input.enumeration.Season;
+import com.github.lltal.observer.config.constant.enumeration.Season;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

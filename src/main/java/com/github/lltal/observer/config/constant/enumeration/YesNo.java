@@ -1,4 +1,4 @@
-package com.github.lltal.observer.input.enumeration;
+package com.github.lltal.observer.config.constant.enumeration;
 
 import com.github.lltal.converter.shared.annotation.Convertee;
 import com.github.lltal.converter.shared.annotation.ConverteeField;

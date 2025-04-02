@@ -1,6 +1,6 @@
 package com.github.lltal.observer.service.back.base.internal;
 
-import com.github.lltal.observer.input.enumeration.Season;
+import com.github.lltal.observer.config.constant.enumeration.Season;
 import com.github.lltal.observer.input.dto.TireModelDeletionDto;
 import com.github.lltal.observer.input.dto.TireModelDto;
 import com.github.lltal.observer.model.TireMark;

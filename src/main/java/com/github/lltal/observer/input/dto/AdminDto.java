@@ -5,9 +5,9 @@ import com.github.lltal.filler.shared.annotation.Fillee;
 import com.github.lltal.filler.shared.annotation.FilleeField;
 import com.github.lltal.filler.shared.annotation.Keyboard;
 import com.github.lltal.filler.shared.ifc.Countable;
-import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
-import com.github.lltal.observer.input.enumeration.AdminActionType;
-import com.github.lltal.observer.input.enumeration.YesNo;
+import com.github.lltal.observer.config.constant.enumeration.AdminActionObjectType;
+import com.github.lltal.observer.config.constant.enumeration.AdminActionType;
+import com.github.lltal.observer.config.constant.enumeration.YesNo;
 import lombok.Data;
 
 import static com.github.lltal.observer.config.constant.EnumStringView.ADD;

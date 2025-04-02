@@ -1,8 +1,8 @@
-package com.github.lltal.observer.input.enumeration.converter;
+package com.github.lltal.observer.config.constant.enumeration.converter;
 
 import com.github.lltal.converter.shared.ifc.AbstractConverter;
 import com.github.lltal.observer.config.constant.EnumConverterName;
-import com.github.lltal.observer.input.enumeration.AdminActionObjectType;
+import com.github.lltal.observer.config.constant.enumeration.AdminActionObjectType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
