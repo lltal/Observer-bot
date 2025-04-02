@@ -103,6 +103,7 @@ public class AdminFrontService implements FrontService<AdminDto> {
 
         if (dto.getObjectType() == AdminActionObjectType.LOAD_DATA) {
             loadData(context);
+            dto.setCount(0);
         }
     }
 

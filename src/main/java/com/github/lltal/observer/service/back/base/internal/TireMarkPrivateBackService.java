@@ -26,8 +26,8 @@ public class TireMarkPrivateBackService implements PrivateBackService {
         repo.deleteByName(name);
     }
 
-    public Collection<String> findAllNames() {
-        return repo.findAllName();
+    public Collection<String> findAllNames(boolean withEmptyModels) {
+        return withEmptyModels ? repo.findAllName() : repo.findAllNameWithoutEmptyModels();
     }
 
     public boolean contains(String name) {

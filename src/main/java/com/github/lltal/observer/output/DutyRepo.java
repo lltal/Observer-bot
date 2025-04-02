@@ -11,6 +11,6 @@ import java.util.Collection;
 
 public interface DutyRepo extends JpaRepository<Duty, Long> {
 
-    @Query(value = "select * from duty where duty.createdAt between :startDate and :endDate", nativeQuery = true)
+    @Query(value = "select * from duty where duty.created_at between :startDate and :endDate", nativeQuery = true)
     Collection<Duty> findAllByDate(Instant startDate, Instant endDate);
 }

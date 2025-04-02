@@ -2,10 +2,10 @@ package com.github.lltal.observer.service.front.base.internal;
 
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.starter.command.CommandContext;
-import com.github.lltal.observer.input.dto.DutyDto;
-import com.github.lltal.observer.input.dto.TireDto;
 import com.github.lltal.observer.config.constant.enumeration.YesNo;
 import com.github.lltal.observer.config.constant.enumeration.converter.YesNoConverter;
+import com.github.lltal.observer.input.dto.DutyDto;
+import com.github.lltal.observer.input.dto.TireDto;
 import com.github.lltal.observer.input.exception.WrongFormatException;
 import com.github.lltal.observer.service.back.base.internal.DutyBackService;
 import com.github.lltal.observer.service.front.base.FrontService;
@@ -32,7 +32,6 @@ public class DutyFrontService implements FrontService<DutyDto> {
     private final UiHelper helper;
     private final TireFrontService tireFrontService;
     private final DutyBackService dutyBackService;
-
     @Qualifier(DUTY_SENDER_NAME)
     @Autowired
     private AbstractSender sender;
@@ -73,7 +72,7 @@ public class DutyFrontService implements FrontService<DutyDto> {
     }
 
     private void execFio(DutyDto dutyDto, CommandContext context) {
-        dutyDto.setFio(context.getName());
+        dutyDto.setFio(getFioFromContext(context));
         dutyDto.setTgId(updateParser.getUserName(context));
         dutyDto.setCount(dutyDto.getCount() + 2);
     }
@@ -136,5 +135,9 @@ public class DutyFrontService implements FrontService<DutyDto> {
         context.getUserBotSession().setData(dutyDto);
 
         sendNextMessage(dutyDto, context);
+    }
+
+    private String getFioFromContext(CommandContext context) {
+        return String.join(" ", (String[]) context.getData());
     }
 }

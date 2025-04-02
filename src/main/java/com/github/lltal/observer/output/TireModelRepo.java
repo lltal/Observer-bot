@@ -46,5 +46,12 @@ public interface TireModelRepo extends JpaRepository<TireModel, Long> {
             @Param("season") Season season
     );
 
+    @Query(value = "select distinct trmo.season from tire_model trmo" +
+            " join tire_mark trma on trmo.mark_id = trma.id" +
+            " where trma.name = :markName",
+            nativeQuery = true
+    )
+    Collection<Season> findAvailableSeasons(@Param("markName") String markName);
+
     void deleteByName(String name);
 }

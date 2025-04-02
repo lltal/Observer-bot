@@ -38,7 +38,7 @@ public class Duty {
     @Id
     @GeneratedValue(generator = DbConstants.GENERATOR_ID)
     private Long id;
-    @Column(columnDefinition = "TIMESTAMPTZ", nullable = false)
+    @Column(columnDefinition = "TIMESTAMPTZ", nullable = false, name = "created_at")
     private Instant createdAt;
     @Column(nullable = false)
     private String fio;

@@ -14,5 +14,9 @@ public interface TireMarkRepo extends JpaRepository<TireMark, Long> {
     @Query(value = "select tire_mark.name from tire_mark", nativeQuery = true)
     Collection<String> findAllName();
 
+    @Query(value = "select trma.name from tire_mark trma" +
+            " join tire_model trmo on trmo.mark_id = trma.id", nativeQuery = true)
+    Collection<String> findAllNameWithoutEmptyModels();
+
     boolean existsByName(String name);
 }

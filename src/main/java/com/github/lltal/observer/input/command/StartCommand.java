@@ -55,7 +55,6 @@ public class StartCommand {
                     )
             );
         } else {
-
             if (!isActive()) {
                 helper.sendMessage(
                         context,
@@ -102,7 +101,8 @@ public class StartCommand {
 
         } catch (RuntimeException e) {
             log.error("Исключение во время выполнения команды /start", e);
-            context.getEngine().executeNotException(
+            helper.sendMessage(
+                    context,
                     helper.createMessage(
                             chatId,
                             "Что-то пошло не так. Попробуй начать заново"
@@ -114,13 +114,15 @@ public class StartCommand {
         }
     }
 
-private boolean isActive() {
+    private boolean isActive() {
         Instant now = Instant.now();
         LocalTime currentTime = LocalTime.ofInstant(now, ZoneId.of(MOSCOW_TIMEZONE).getRules().getOffset(now));
 
         LocalTime startTime = LocalTime.of(START_HOUR, 0);
         LocalTime endTime = LocalTime.of(END_HOUR, 0);
 
-        return !(currentTime.isAfter(startTime) && currentTime.isBefore(endTime));
+        //return !(currentTime.isAfter(startTime) && currentTime.isBefore(endTime));
+
+        return true;
     }
 }

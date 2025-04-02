@@ -2,11 +2,14 @@ package com.github.lltal.observer.service.front.base.internal;
 
 import com.github.lltal.filler.shared.ifc.AbstractSender;
 import com.github.lltal.filler.starter.command.CommandContext;
+import com.github.lltal.observer.config.constant.enumeration.Season;
 import com.github.lltal.observer.config.constant.enumeration.YesNo;
 import com.github.lltal.observer.config.constant.enumeration.converter.SeasonConverter;
 import com.github.lltal.observer.config.constant.enumeration.converter.YesNoConverter;
+import com.github.lltal.observer.input.dto.DutyDto;
 import com.github.lltal.observer.input.dto.TireDto;
 import com.github.lltal.observer.input.exception.WrongFormatException;
+import com.github.lltal.observer.service.back.base.internal.TireModelPrivateBackService;
 import com.github.lltal.observer.service.front.base.FrontService;
 import com.github.lltal.observer.service.front.ui.ContextParser;
 import com.github.lltal.observer.service.front.ui.UiHelper;
@@ -17,6 +20,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
+import java.util.Collection;
+
 import static com.github.lltal.observer.config.constant.SenderName.TIRE_SENDER_NAME;
 
 
@@ -25,9 +30,10 @@ import static com.github.lltal.observer.config.constant.SenderName.TIRE_SENDER_N
 @RequiredArgsConstructor
 public class TireFrontService implements FrontService<TireDto> {
     private final ContextParser parser;
-    private final TireMarkDeletionPrivateFrontService markFronService;
+    private final TireMarkDeletionPrivateFrontService markFrontService;
     private final TireModelDeletionPrivateFrontService modelDeletionFrontService;
     private final TireTypeSizeDeletionPrivateFrontService typeSizeFrontService;
+    private final TireModelPrivateBackService tireModelPrivateBackService;
     private final UiHelper helper;
     private final YesNoConverter yesNoConverter;
     private final SeasonConverter seasonConverter;
@@ -63,8 +69,8 @@ public class TireFrontService implements FrontService<TireDto> {
     private BotApiMethod<?> getNextMessage(TireDto tireDto, CommandContext context) {
         return switch (tireDto.getCount()) {
             case 0 -> sender.getNextMessage(tireDto, parser.getChatId(context));
-            case 1 -> markFronService.createMarkKeyboard(context);
-            case 2 -> sender.getNextMessage(tireDto, parser.getChatId(context));
+            case 1 -> markFrontService.createMarkKeyboard(context, false);
+            case 2 -> createSeasonKeyboard(tireDto, context);
             case 3 -> modelDeletionFrontService.createModelKeyboard(context, tireDto.getMarkName(), tireDto.getSeason());
             case 4 -> typeSizeFrontService.createTypeSizeKeyboard(context);
             case 5 -> sender.getNextMessage(tireDto, parser.getChatId(context));
@@ -126,9 +132,22 @@ public class TireFrontService implements FrontService<TireDto> {
                         context.getName()
                 )
         );
+        tireDto.setCount(tireDto.getCount() + 1);
 
         if (tireDto.getCreateSuccessfully() == YesNo.NO) {
-            tireDto.setCount(10);
+            DutyDto dutyDto = (DutyDto) context.getUserBotSession().getData();
+            dutyDto.getTires().remove(dutyDto.getTires().size() - 1);
         }
+    }
+
+    private BotApiMethod<?> createSeasonKeyboard(TireDto tireDto, CommandContext context) {
+        Collection<Season> availableSeasons = tireModelPrivateBackService.findAvailableSeasons(tireDto.getMarkName());
+        Collection<String> seasonStringView = availableSeasons.stream().map(seasonConverter::convertToString).toList();
+
+        return helper.createKeyboard(
+                "Выбери сезон",
+                parser.getChatId(context),
+                seasonStringView
+        );
     }
 }

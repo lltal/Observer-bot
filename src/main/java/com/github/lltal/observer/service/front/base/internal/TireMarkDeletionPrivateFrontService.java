@@ -67,7 +67,12 @@ public class TireMarkDeletionPrivateFrontService implements PrivateFrontService 
     }
 
     public BotApiMethod<?> createMarkKeyboard(CommandContext context) {
-        Collection<String> names = markPrivateBackService.findAllNames();
+        return createMarkKeyboard(context, true);
+    }
+
+    public BotApiMethod<?> createMarkKeyboard(CommandContext context, boolean withEmptyModels) {
+
+        Collection<String> names = markPrivateBackService.findAllNames(withEmptyModels);
 
         if (names.isEmpty())
             throw new EmptyListException("Список марок пуст");

@@ -11,6 +11,7 @@ import com.github.lltal.observer.service.back.base.BackService;
 import com.github.lltal.observer.service.back.converter.DutyConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -36,6 +37,7 @@ public class DutyBackService implements BackService {
         dutyRepo.save(duty);
     }
 
+    @Transactional
     public Collection<DutyResultDto> findAllByDate(Instant startDate, Instant endDate) {
         return dutyConverter.buildAllDtos(
                 dutyRepo.findAllByDate(startDate, endDate)

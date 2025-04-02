@@ -44,6 +44,10 @@ public class TireModelPrivateBackService implements PrivateBackService {
         );
     }
 
+    public Collection<Season> findAvailableSeasons(String markName) {
+        return repo.findAvailableSeasons(markName);
+    }
+
     public Collection<String> findAllNames(String markName, Season season) {
         return repo.findAllNames(markName, season);
     }

@@ -11,6 +11,7 @@ import com.github.lltal.observer.config.constant.enumeration.YesNo;
 import lombok.Data;
 
 import static com.github.lltal.observer.config.constant.EnumStringView.ADD;
+import static com.github.lltal.observer.config.constant.EnumStringView.LOAD_DATA;
 import static com.github.lltal.observer.config.constant.EnumStringView.LOCATION;
 import static com.github.lltal.observer.config.constant.EnumStringView.MARK;
 import static com.github.lltal.observer.config.constant.EnumStringView.MODEL;
@@ -40,7 +41,8 @@ public class AdminDto implements Countable {
              @Button(userView = LOCATION, cbValue = LOCATION),
              @Button(userView = TYPE_SIZE, cbValue = TYPE_SIZE),
              @Button(userView = MARK, cbValue = MARK),
-             @Button(userView = MODEL, cbValue = MODEL)
+             @Button(userView = MODEL, cbValue = MODEL),
+             @Button(userView = LOAD_DATA, cbValue = LOAD_DATA)
      })
      @FilleeField(text = "С чем произвести действие?")
      private AdminActionObjectType objectType;
