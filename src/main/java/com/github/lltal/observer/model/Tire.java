@@ -1,13 +1,10 @@
 package com.github.lltal.observer.model;
 
-
 import com.github.lltal.observer.service.front.ui.UiHelper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,9 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
@@ -27,7 +24,10 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(
-        name = "tire"
+        name = "tire",
+        indexes = {
+                @Index(name = "idx_duty_id", columnList = "duty_id")
+        }
 )
 @NoArgsConstructor
 @AllArgsConstructor

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
@@ -52,6 +51,6 @@ public class Duty {
     @Column(updatable = false)
     private String phoneNumber;
     @OneToMany(mappedBy = "duty", cascade = CascadeType.ALL)
-    @Fetch(value = FetchMode.SUBSELECT)
+    @BatchSize(size = 15)
     private Collection<Tire> tires = new ArrayList<>();
 }

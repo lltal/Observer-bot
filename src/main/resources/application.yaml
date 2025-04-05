@@ -6,10 +6,11 @@ telegram:
       enable: true
       time-life:
         chat: 60
-        user: 10
+        user: 39600
 bot:
   admins:
     - 5975765192
+    - 337619354
 
 dto-filler:
   packages-to-scan:
